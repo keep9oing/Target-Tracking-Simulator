@@ -211,7 +211,7 @@ def move_car(move_direction):
 	current_x = next_x
 	current_y = next_y
 	write_car_state([current_x, current_y])
-	return car	
+	return car		
 
 def move_drone(drone_dir_x, drone_dir_y, speed):
 	global current_x_drone
@@ -237,6 +237,15 @@ def get_car_state():
 	move_to_car = list(map(float, move_to_car))
 	return move_to_car[0], move_to_car[1]
 
+def write_direction(state_x,state_y,state_z):
+	global time_step_drone
+
+	time_step_drone += 1
+
+	file = open("state_drone.txt", "w")
+	file.write(str(state_x) + ' ' + str(state_y) + ' ' + str(state_z) + ' ' + str(time_step_drone))
+	file.close()
+
 def init():
     ax.add_patch(car)
     ax.add_patch(drone)
@@ -261,6 +270,8 @@ def animate(i):
 	# for drone
 	speed_drone = 1.0
 	while(True):
+
+		write_direction(car_x,car_y,0)
 		move_dir_x_drone, move_dir_y_drone, move_dir_z_drone = get_direction_given()
 		if (time_step_drone == time_step_car):	
 			d = move_drone(move_dir_x_drone, move_dir_y_drone, speed_drone)
@@ -276,6 +287,7 @@ def main_animation():
 	# 							   frames=FLAGS.grid_size-10,
 	# 							   interval=500,
 	# 							   blit=False)
+	
 	anim = animation.FuncAnimation(fig, animate,
 								   init_func=init,
 								   frames=20,
